@@ -15,18 +15,29 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
+import com.sun.j3d.utils.behaviors.vp.OrbitBehavior;
+import com.sun.j3d.utils.universe.SimpleUniverse;
+import com.sun.j3d.utils.universe.ViewingPlatform;
 
 
 public class Robot3D extends JFrame implements ActionListener, KeyListener{
 
     private boolean przyciskA;
-    private boolean przyciskB;
+    private boolean przyciskD;
+    private boolean przyciskW;
+    private boolean przyciskS;
+
+
     TransformGroup tranGroupRamienia = new TransformGroup();
     Transform3D t3dRamienia = new Transform3D();
     TransformGroup tranGroupPodstawki = new TransformGroup();
     TransformGroup tranGroupStojaka = new TransformGroup();
     Transform3D t3DPodstawki = new Transform3D();
     Transform3D t3DStojaka = new Transform3D();
+
+    //Transform3D t3DPodstawkiPrzesuniecie = new Transform3D();
+    //Transform3D t3DStojakaPrzesuniecie = new Transform3D();
+    Transform3D t3dRamieniaPrzesuniecie = new Transform3D();
 
     Robot3D(){
 
@@ -87,7 +98,7 @@ public class Robot3D extends JFrame implements ActionListener, KeyListener{
         wyglad_walca.setMaterial(material_walca);
 
 /*
-        tg_podstawka.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+        tg_podstawka.setCapability(TransformGroup.AramLLOW_TRANSFORM_WRITE);
         tg_podstawka.setTransform(t3d_podstawka);
         tg_podstawka.addChild(podstawka.getSceneGroup());
         glowna_scena.addChild(tg_podstawka);
@@ -123,11 +134,14 @@ public class Robot3D extends JFrame implements ActionListener, KeyListener{
         tranGroupRamienia.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
         tranGroupRamienia.setTransform(t3dRamienia);
         //tranGroupRamienia.addChild(ramie);
-        tranGroupStojaka.addChild(tranGroupRamienia);
 
         t3DPodstawki.set(new Vector3f(0.0f,-0.4f,0.0f));
         t3DStojaka.set(new Vector3f(0.0f,-0.15f,0.0f));
-        t3dRamienia.set(new Vector3f(0.2f,0.2f,0.0f));
+        t3dRamieniaPrzesuniecie.setTranslation(new Vector3f(-0.2f,0.2f,0.0f));
+
+        t3dRamienia.mul(t3dRamieniaPrzesuniecie);
+        tranGroupRamienia.setTransform(t3dRamienia);
+        tranGroupStojaka.addChild(tranGroupRamienia);
 
         tmp_rot.rotZ(+Math.PI/2);
         t3dRamienia.mul(tmp_rot);
@@ -146,6 +160,7 @@ public class Robot3D extends JFrame implements ActionListener, KeyListener{
         tranGroupPodstawki.addChild(podstawka);
         tranGroupStojaka.addChild(stojak);
         tranGroupRamienia.addChild(ramie);
+
         obrot_animacja.addChild(tranGroupStojaka);
         //wezel_scena.addChild(tranGroupRamienia);
 
@@ -174,7 +189,9 @@ public class Robot3D extends JFrame implements ActionListener, KeyListener{
 
         switch (przycisk) {
             case KeyEvent.VK_A -> przyciskA = true;
-            case KeyEvent.VK_B -> przyciskB = true;
+            case KeyEvent.VK_D -> przyciskD = true;
+            case KeyEvent.VK_W -> przyciskW = true;
+            case KeyEvent.VK_S -> przyciskS = true;
         }
         obrot();
     }
@@ -183,7 +200,9 @@ public class Robot3D extends JFrame implements ActionListener, KeyListener{
     public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_A -> przyciskA = false;
-            case KeyEvent.VK_B -> przyciskB = false;
+            case KeyEvent.VK_D -> przyciskD = false;
+            case KeyEvent.VK_W -> przyciskW = false;
+            case KeyEvent.VK_S -> przyciskS = false;
         }
     }
     public void obrot() {
@@ -193,10 +212,20 @@ public class Robot3D extends JFrame implements ActionListener, KeyListener{
             t3DStojaka.mul(akcja);
             tranGroupStojaka.setTransform(t3DStojaka);
         }
-        if (przyciskB) {
+        if (przyciskD) {
             akcja.rotY(-Math.PI / 180);
             t3DStojaka.mul(akcja);
             tranGroupStojaka.setTransform(t3DStojaka);
+        }
+        if (przyciskW) {
+            akcja.rotZ(Math.PI / 180);
+            t3dRamienia.mul(akcja);
+            tranGroupRamienia.setTransform(t3dRamienia);
+        }
+        if (przyciskS) {
+            akcja.rotZ(-Math.PI / 180);
+            t3dRamienia.mul(akcja);
+            tranGroupRamienia.setTransform(t3dRamienia);
         }
         }
     }
