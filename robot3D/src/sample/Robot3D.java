@@ -118,7 +118,7 @@ public class Robot3D extends JFrame{
         przesuniecie_kuli.set(new Vector3f(0.0f, 0.3f,0.0f));
         przesuniecie_walca.set(new Vector3f(0.0f,-0.4f,0.0f));
         przesuniecie_walca2.set(new Vector3f(0.0f,-0.15f,0.0f));
-        przesuniecie_walca3.set(new Vector3f(0.0f,-0.5f,0.0f));
+        przesuniecie_walca3.set(new Vector3f(0.2f,0.05f,0.0f));
 
         tmp_rot.rotZ(+Math.PI/2);
         przesuniecie_walca3.mul(tmp_rot);
@@ -126,7 +126,7 @@ public class Robot3D extends JFrame{
         trans_kuli.setTransform(przesuniecie_kuli);
         trans_walca.setTransform(przesuniecie_walca);
         trans_walca2.setTransform(przesuniecie_walca2);
-        trans_walca3.setTransform(przesuniecie_walca2);
+        trans_walca3.setTransform(przesuniecie_walca3);
 
         wezel_scena.addChild(trans_kuli);
         wezel_scena.addChild(trans_walca);
@@ -139,7 +139,7 @@ public class Robot3D extends JFrame{
         //trans_kuli.addChild(kula);
         trans_walca.addChild(walec);
         trans_walca2.addChild(walec2);
-        trans_walca2.addChild(walec3);
+        trans_walca3.addChild(walec3);
 
         return wezel_scena;
 
