@@ -1,5 +1,6 @@
 package sample;
 
+import com.sun.j3d.utils.behaviors.vp.OrbitBehavior;
 import com.sun.j3d.utils.geometry.*;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 import javax.media.j3d.*;
@@ -62,9 +63,17 @@ public class Robot3D extends JFrame implements ActionListener, KeyListener{
         SimpleUniverse simpleU = new SimpleUniverse(canvas3D);
 
         Transform3D przesuniecie_obserwatora = new Transform3D();
-        przesuniecie_obserwatora.set(new Vector3f(0.0f,0.0f,3.0f));
+        Transform3D rot_obs = new Transform3D();
+        rot_obs.rotY((float)(-Math.PI/7));
+        przesuniecie_obserwatora.set(new Vector3f(-1.2f,1.5f,2.0f));
+        przesuniecie_obserwatora.mul(rot_obs);
+        rot_obs.rotX((float)(-Math.PI/6));
+        przesuniecie_obserwatora.mul(rot_obs);
 
+        OrbitBehavior orbit = new OrbitBehavior(canvas3D, OrbitBehavior.REVERSE_ROTATE);
+        orbit.setSchedulingBounds(new BoundingSphere());
         simpleU.getViewingPlatform().getViewPlatformTransform().setTransform(przesuniecie_obserwatora);
+        simpleU.getViewingPlatform().setViewPlatformBehavior(orbit);
 
         simpleU.addBranchGraph(scena);
     }
@@ -116,7 +125,7 @@ public class Robot3D extends JFrame implements ActionListener, KeyListener{
         ///////////////////TRANSFORMACJE////////////////////////////
         Transform3D  tmp_rot = new Transform3D();
         tmp_rot.rotZ(Math.PI/2);
-        t3DPodstawki.set(new Vector3f(0.0f,-0.4f,0.0f));
+        t3DPodstawki.set(new Vector3f(0.0f,-0.35f,0.0f));
         t3DStojaka.set(new Vector3f(0.0f,-0.15f,0.0f));
         t3dStawuPrzesuniecie.setTranslation(new Vector3f(0f,0f,0.0f));
         t3dRamienia.setTranslation(new Vector3f(0.2f,0f,0.0f));
@@ -236,4 +245,3 @@ public class Robot3D extends JFrame implements ActionListener, KeyListener{
         }
         }
     }
-
