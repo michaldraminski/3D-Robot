@@ -24,21 +24,22 @@ public class Robot3D extends JFrame implements ActionListener, KeyListener{
     private boolean przyciskD;
     private boolean przyciskW;
     private boolean przyciskS;
+    private boolean przyciskE;
+    private boolean przyciskR;
 
-    TransformGroup tranGroupStawu = new TransformGroup();
-    TransformGroup tranGroupRamienia = new TransformGroup();
     TransformGroup tranGroupPodstawki = new TransformGroup();
     TransformGroup tranGroupStojaka = new TransformGroup();
+    TransformGroup tranGroupStawu1 = new TransformGroup();
+    TransformGroup tranGroupRamienia1 = new TransformGroup();
+    TransformGroup tranGroupStawu2 = new TransformGroup();
+    TransformGroup tranGroupRamienia2 = new TransformGroup();
 
-    Transform3D t3dRamienia = new Transform3D();
-    Transform3D t3Dstawu = new Transform3D();
     Transform3D t3DPodstawki = new Transform3D();
     Transform3D t3DStojaka = new Transform3D();
-
-    //Transform3D t3DPodstawkiPrzesuniecie = new Transform3D();
-    //Transform3D t3DStojakaPrzesuniecie = new Transform3D();
-    Transform3D t3dRamieniaPrzesuniecie = new Transform3D();
-    Transform3D t3dStawuPrzesuniecie = new Transform3D();
+    Transform3D t3dRamienia1 = new Transform3D();
+    Transform3D t3Dstawu1 = new Transform3D();
+    Transform3D t3dRamienia2 = new Transform3D();
+    Transform3D t3Dstawu2 = new Transform3D();
 
     Robot3D(){
 
@@ -93,7 +94,8 @@ public class Robot3D extends JFrame implements ActionListener, KeyListener{
 
         wyglad_kuli.setMaterial(material_kuli);
         wyglad_kuli.setColoringAttributes(cattr);
-        Sphere staw = new Sphere(0.03f,Sphere.GENERATE_NORMALS,80,wyglad_kuli);
+        Sphere staw1 = new Sphere(0.03f,Sphere.GENERATE_NORMALS,80,wyglad_kuli);
+        Sphere staw2 = new Sphere(0.03f,Sphere.GENERATE_NORMALS,80,wyglad_kuli);
 
         BoundingSphere obszar_ogr =  new BoundingSphere(new Point3d(0.0d,0.0d,0.0d), 10.0d);
         Material material_walca = new Material(new Color3f(0.5f, 1f,0.5f), new Color3f(0.5f,1f,0.5f),
@@ -127,20 +129,23 @@ public class Robot3D extends JFrame implements ActionListener, KeyListener{
         tmp_rot.rotZ(Math.PI/2);
         t3DPodstawki.set(new Vector3f(0.0f,-0.35f,0.0f));
         t3DStojaka.set(new Vector3f(0.0f,-0.15f,0.0f));
-        t3dStawuPrzesuniecie.setTranslation(new Vector3f(0f,0f,0.0f));
-        t3dRamienia.setTranslation(new Vector3f(0.2f,0f,0.0f));
+        t3dRamienia1.setTranslation(new Vector3f(0.2f,0f,0.0f));
         tmp_rot.rotZ(+Math.PI/2);
-        t3dRamienia.mul(tmp_rot);
+        t3dRamienia1.mul(tmp_rot);
+        t3dRamienia2.setTranslation(new Vector3f(0.2f,0f,0.0f));
+        tmp_rot.rotZ(+Math.PI/2);
+        t3dRamienia2.mul(tmp_rot);
 
         Cylinder podstawka = new Cylinder(1f,0.001f,wyglad_walca);
         Cylinder stojak = new Cylinder(0.02f,0.4f);
-        Cylinder ramie = new Cylinder(0.02f,0.4f);
+        Cylinder ramie1 = new Cylinder(0.02f,0.4f);
+        Cylinder ramie2 = new Cylinder(0.02f,0.4f);
 
+        t3Dstawu1.set(new Vector3f(0.0f, 0.2f,0.0f));
+        t3Dstawu2.set(new Vector3f(0f, -0.2f,0.0f));
 
-
-        t3Dstawu.set(new Vector3f(0.0f, 0.2f,0.0f));
-
-        tranGroupStawu.setTransform(t3Dstawu);
+        tranGroupStawu1.setTransform(t3Dstawu1);
+        tranGroupStawu2.setTransform((t3Dstawu2));
 
         //wezel_scena.addChild(tranGroupStawu);
 
@@ -149,32 +154,41 @@ public class Robot3D extends JFrame implements ActionListener, KeyListener{
         wezel_scena.addChild(obrot_animacja);
 
         tranGroupStojaka.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-        tranGroupStawu.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-        tranGroupRamienia.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-        tranGroupRamienia.setTransform(t3dRamienia);
-        //tranGroupRamienia.addChild(ramie);
+        tranGroupStawu1.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+        tranGroupStawu2.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+        tranGroupRamienia1.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+        tranGroupRamienia2.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+        //tranGroupRamienia1.setTransform(t3dRamienia1);
+        //tranGroupRamienia2.setTransform(t3dRamienia2);
+        //tranGroupRamienia.addChild(ramie1);
 
 
+        tranGroupRamienia1.setTransform(t3Dstawu1);
+        tranGroupStojaka.addChild(tranGroupStawu1);
+        tranGroupStawu1.addChild(tranGroupRamienia1);
 
-        t3Dstawu.mul(t3dStawuPrzesuniecie);
-        tranGroupRamienia.setTransform(t3Dstawu);
-        tranGroupStojaka.addChild(tranGroupStawu);
-        tranGroupStawu.addChild(tranGroupRamienia);
+        tranGroupRamienia1.addChild(tranGroupStawu2);
+
+        tranGroupRamienia2.setTransform(t3Dstawu2);
+        tranGroupStawu2.addChild(tranGroupRamienia2);
 
         tranGroupPodstawki.setTransform(t3DPodstawki);
         tranGroupStojaka.setTransform(t3DStojaka);
-        tranGroupRamienia.setTransform(t3dRamienia);
+        tranGroupRamienia1.setTransform(t3dRamienia1);
+        tranGroupRamienia2.setTransform(t3dRamienia2);
 
         wezel_scena.addChild(tranGroupPodstawki);
-        //wezel_scena.addChild(tranGroupStojaka);
         wezel_scena.addChild(swiatlo_tla);
         wezel_scena.addChild(swiatlo_kier);
         wezel_scena.addChild(swiatlo_pnkt);
         wezel_scena.addChild(swiatlo_sto);
         tranGroupPodstawki.addChild(podstawka);
         tranGroupStojaka.addChild(stojak);
-        tranGroupRamienia.addChild(ramie);
-        tranGroupStawu.addChild(staw);
+        tranGroupRamienia1.addChild(ramie1);
+        tranGroupStawu1.addChild(staw1);
+
+        tranGroupRamienia2.addChild(ramie2);
+        tranGroupStawu2.addChild(staw2);
 
         obrot_animacja.addChild(tranGroupStojaka);
         //obrot_animacja.addChild(tranGroupStawu);
@@ -208,6 +222,9 @@ public class Robot3D extends JFrame implements ActionListener, KeyListener{
             case KeyEvent.VK_D -> przyciskD = true;
             case KeyEvent.VK_W -> przyciskW = true;
             case KeyEvent.VK_S -> przyciskS = true;
+            case KeyEvent.VK_E -> przyciskE = true;
+            case KeyEvent.VK_R -> przyciskR = true;
+
         }
         obrot();
     }
@@ -219,6 +236,8 @@ public class Robot3D extends JFrame implements ActionListener, KeyListener{
             case KeyEvent.VK_D -> przyciskD = false;
             case KeyEvent.VK_W -> przyciskW = false;
             case KeyEvent.VK_S -> przyciskS = false;
+            case KeyEvent.VK_E -> przyciskE = false;
+            case KeyEvent.VK_R -> przyciskR = false;
         }
     }
     public void obrot() {
@@ -235,13 +254,24 @@ public class Robot3D extends JFrame implements ActionListener, KeyListener{
         }
         if (przyciskW) {
             akcja.rotZ(Math.PI / 90);
-            t3Dstawu.mul(akcja);
-            tranGroupStawu.setTransform(t3Dstawu);
+            t3Dstawu1.mul(akcja);
+            tranGroupStawu1.setTransform(t3Dstawu1);
         }
         if (przyciskS) {
             akcja.rotZ(-Math.PI / 90);
-            t3Dstawu.mul(akcja);
-            tranGroupStawu.setTransform(t3Dstawu);
+            t3Dstawu1.mul(akcja);
+            tranGroupStawu1.setTransform(t3Dstawu1);
         }
+        if (przyciskE) {
+            akcja.rotZ(-Math.PI / 90);
+            t3Dstawu2.mul(akcja);
+            tranGroupStawu2.setTransform(t3Dstawu2);
+        }
+        if (przyciskR) {
+            akcja.rotZ(Math.PI / 90);
+            t3Dstawu2.mul(akcja);
+            tranGroupStawu2.setTransform(t3Dstawu2);
+        }
+
         }
     }
